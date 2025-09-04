@@ -30,6 +30,7 @@ const App: React.FC = () => {
     const [contentPlan, setContentPlan] = useState<Partial<ContentPlan> | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const [generationProgress, setGenerationProgress] = useState<number>(0);
 
     const [thirtyDayPlan, setThirtyDayPlan] = useState<ThirtyDayPlan | null>(null);
     const [isThirtyDayPlanLoading, setIsThirtyDayPlanLoading] = useState<boolean>(false);
@@ -46,6 +47,18 @@ const App: React.FC = () => {
         setContentPlan(null);
         setThirtyDayPlan(null);
         setThirtyDayPlanError(null);
+        setGenerationProgress(0);
+
+        const progressInterval = setInterval(() => {
+            setGenerationProgress(prev => {
+                const next = prev + 5;
+                if (next > 95) {
+                    clearInterval(progressInterval);
+                    return 95;
+                }
+                return next;
+            });
+        }, 200);
 
         try {
             const stream = generateContentPlanStream(topic, socialMediaLink, contentStyle);
@@ -54,13 +67,16 @@ const App: React.FC = () => {
 
             for await (const chunk of stream) {
                 if (isFirstChunk) {
-                    setIsLoading(false); // Hide skeleton
-                    setContentPlan({});  // Show empty card structure immediately
+                    // Stop skeleton, show empty card structure
+                    setContentPlan({});  
                     isFirstChunk = false;
                 }
                 accumulatedJson += chunk;
             }
             
+            clearInterval(progressInterval);
+            setGenerationProgress(100);
+
             if (accumulatedJson) {
                 const startIndex = accumulatedJson.indexOf('{');
                 const endIndex = accumulatedJson.lastIndexOf('}');
@@ -79,8 +95,13 @@ const App: React.FC = () => {
         } catch (err: unknown) {
             setError(err instanceof Error ? err.message : 'An unknown error occurred.');
             setContentPlan(null);
-            setIsLoading(false);
             console.error(err);
+        } finally {
+             clearInterval(progressInterval);
+             setTimeout(() => {
+                setIsLoading(false);
+                setGenerationProgress(0);
+             }, 1000); // Give time for the 100% to be seen
         }
     }, [topic, socialMediaLink, contentStyle, isLoading]);
 
@@ -258,25 +279,31 @@ const App: React.FC = () => {
                         </div>
 
                         <div className="flex justify-center pt-2">
-                            <button
+                             <button
                                 onClick={handleGeneratePlan}
                                 disabled={isLoading || isThirtyDayPlanLoading || !topic.trim()}
-                                className="w-full sm:w-auto flex-shrink-0 px-8 py-4 text-lg font-bold text-white bg-[#D3A6A0] rounded-full hover:bg-[#c99891] transition-transform transform hover:scale-105 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:scale-100 shadow-lg"
+                                className="relative w-full sm:w-auto flex-shrink-0 px-8 py-4 text-lg font-bold text-white bg-[#D3A6A0] rounded-full hover:bg-[#c99891] transition-transform transform hover:scale-105 disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-not-allowed disabled:scale-100 shadow-lg overflow-hidden"
                             >
-                                {isLoading ? 'Generating...' : 'Create Plan'}
+                                <div 
+                                    className="absolute top-0 left-0 h-full bg-[#b5857e] transition-all duration-300 ease-linear"
+                                    style={{ width: `${generationProgress}%` }}
+                                ></div>
+                                <span className="relative z-10">
+                                    {isLoading ? `Generating... ${generationProgress}%` : 'Create Plan'}
+                                </span>
                             </button>
                         </div>
                     </div>
 
                     <div className="mt-12">
-                        {isLoading && <SkeletonCard />}
+                        {isLoading && !contentPlan && <SkeletonCard />}
                         {error && (
                             <div className="text-center p-4 sm:p-6 bg-red-100 border border-red-300 text-red-700 rounded-xl max-w-2xl mx-auto animate-fade-in">
                                 <h3 className="font-bold">Oops! Something went wrong.</h3>
                                 <p>{error}</p>
                             </div>
                         )}
-                        {!isLoading && contentPlan && (
+                        {contentPlan && (
                            <div className="animate-fade-in">
                                <ContentPlanCard plan={contentPlan} />
                                <div className="mt-8 text-center">

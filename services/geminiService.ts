@@ -1,4 +1,5 @@
 
+
 import { GoogleGenAI, Type } from "@google/genai";
 import type { ThirtyDayPlan } from '../types';
 
@@ -95,41 +96,60 @@ export async function* generateContentPlanStream(
             : "";
 
         const prompt = `
-            You are an expert social media strategist and business consultant specializing in creating viral content for platforms like Instagram Reels and TikTok. Your goal is to generate a complete, actionable content plan based on user-provided details.
+            You are an expert social media strategist and direct response copywriter, specializing in creating viral content that drives action. Your goal is to generate a complete, actionable content plan based on user-provided details, using a proven copywriting framework.
 
             **USER'S DETAILS:**
             - **Main Topic:** "${topic}"
             - **Content Style:** ${contentStyle}. ${styleGuidance}
             ${linkGuidance ? `- **Profile Inspiration:** ${linkGuidance}` : ''}
+            
+            **CRITICAL OVERRIDING INSTRUCTION: HUMAN-CENTERED & DIRECT CONTENT**
+            This is the most important rule. You MUST base your entire plan directly on the user's input. Do NOT abstract it. Do NOT turn it into a generic marketing concept.
+            -   **FAILURE EXAMPLE:** If user says "showing clips of my ongoing home theater project," it is a COMPLETE FAILURE to suggest an idea like "The Ultimate Cinema Experience" or a hook like "Tired of tangled wires?".
+            -   **SUCCESS EXAMPLE:** For the same input, a successful idea is "Sharing our latest home theater build, step-by-step!" and a successful hook is "You won't believe what goes into a REAL home theater build. Here's day 1."
+            -   **Your Persona:** Think like a creator, not a corporation. Your tone must be authentic, direct, and human. If this rule is not followed, the entire output is useless.
 
             **INSTRUCTIONS:**
-            Your primary and most critical task is to apply the following methodology to generate the content plan.
+            Apply the following methodologies, always filtered through the CRITICAL OVERRIDING INSTRUCTION above.
 
-            **Methodology 1: Identify The REAL Business (Core Principle Analysis)**
-            This is your first step. Before generating any content ideas, you MUST analyze the user's topic and identify what business they are REALLY in. This single insight is the foundation for the entire plan. You will output your analysis in the 'realBusinessJustification' field.
-
-            **Principles to follow:**
-            1.  **Look Beyond the Obvious:** The stated business is rarely the real business. Most entrepreneurs are stuck because they're working on the wrong stuff. The biggest opportunity is the one right in front of them.
-                -   *Example 1:* A gym isn't in the fitness business; it's in the **marketing and sales** business.
-                -   *Example 2:* A supplement company isn't in the product business; it's in the **brand, media, and distribution** business.
-                -   *Example 3:* A cleaning service isn't in the cleaning business; it's in the **recruiting and training** business.
-                -   *Example 4:* A software company might not be in marketing; it might be in the **product** business (if the product sells itself).
-            2.  **Identify the Constraint:** What is the "big hairy problem" that truly determines success in this industry? What's keeping a business in this field from doubling its revenue?
-            3.  **Formulate Justification:** Clearly explain your reasoning in the 'realBusinessJustification' field. State what business the user *thinks* they are in, and what business they are *really* in, and why that mindset shift is the key to growth.
-            4.  **Focus the Plan:** The entire content plan you generate (idea, hook, script, etc.) MUST be a direct consequence of this strategic analysis. It must be designed to solve the *real* business problem you identified.
+            **Methodology 1: Identify The REAL Business & Target Audience**
+            This is your first step. Before generating any content ideas, you MUST analyze the user's topic to identify what business they are REALLY in. This single insight is the foundation for the entire plan.
+            -   **Principle:** A gym isn't in the fitness business; it's in the marketing and sales business. A supplement company isn't a product business; it's a brand and distribution business.
+            -   **Audience Awareness:** Determine the audience's awareness stage (e.g., Problem Aware, Solution Aware).
+            -   **Formulate Justification:** Explain your reasoning in the 'realBusinessJustification' field. The entire content plan MUST be a direct consequence of this analysis.
 
             **Methodology 2: Idea Generation (Niche Down & Framing)**
-            1.  **Niche Down:** Based on your "Real Business" analysis, create a specific, targeted idea. Example: If the user's topic is "cleaning business," your analysis identifies the real business as 'recruiting and training'. A niched-down idea would be "How I went from $40k to $150k a month by realizing I was in the recruiting business, not the cleaning business."
-            2.  **Framing:** Choose a powerful framing approach (e.g., How I, Lessons, Mistakes, Ways, Tools, Reasons).
-            3.  **Credibility:** Use personal and authoritative language.
+            1.  **Niche Down:** Based on your "Real Business" analysis, create a specific, targeted idea. The idea MUST follow the CRITICAL OVERRIDING INSTRUCTION.
 
-            **Methodology 3: Script & Production**
-            - **Hook:** Generate a powerful hook based on your core insight.
-            - **Script:** Write a concise three-part story (Hook, Problem, Resolution) that reflects the mindset shift.
+            **Methodology 3: Advanced Copywriting for Script & Production**
+            You must apply the following 5-step copywriting framework to generate the hook, script, and CTA. This is a critical instruction.
+
+            1.  **Speak to the Primal Brain (The Life-Force 8):** Your hook and script MUST tap into one or more of these 8 primal human desires:
+                1. Survival, enjoyment of life, life extension.
+                2. Enjoyment of food and beverages.
+                3. Freedom from fear, pain, and danger.
+                4. Sexual companionship.
+                5. Comfortable living conditions.
+                6. To be superior, winning, keeping up with the Joneses.
+                7. Care and protection of loved ones.
+                8. Social approval.
+                Base your core message on one of these to create an urgent tension that the viewer needs to resolve.
+
+            2.  **Inoculate Against Competition:** In the 'conflict' part of your script, subtly expose a "dark side" of the industry or a common flaw in competitors' offerings. Frame this in a way that positions the user as a trusted advocate. Present a weak version of a competitor's argument and then dismantle it with your superior solution in the 'resolution' part.
+
+            3.  **Use "Extreme Specificity":** Crush vague claims. Instead of saying "high quality," be incredibly specific. Use vivid, sensory language in your script and visual ideas to paint a mental movie for the viewer. For example, instead of "fresh ingredients," say "we hand-shred our creamy, whole-milk mozzarella every single morning."
+
+            4.  **Incorporate Proof:** While you can't generate real testimonials, you MUST weave suggestions for social proof into the script or visual ideas. For example, the script could say, "Just ask Sarah, who told us..." or a visual idea could be "Quick shot of three 5-star reviews scrolling on screen."
+
+            5.  **Structure for a Distracted Brain (AIDA):** The final output must follow the AIDA formula mapped to the JSON schema:
+                -   **Attention:** The \`hook\` field. Grab them with a powerful benefit tied to an LF8 desire.
+                -   **Interest & Desire:** The \`script\` object. Expand on the benefits using the Inoculation and Specificity principles.
+                -   **Action:** The \`cta\` field. Tell them *exactly* what to do next in a clear, simple way.
+
             - **Visuals & Editing:** Provide 3 practical tips for each, adhering to the user's chosen **Content Style** (${contentStyle}).
-
+            
             **TASK:**
-            Generate a complete content plan based on all the provided user details, starting with the core principle analysis.
+            Generate a complete content plan based on all the provided user details and methodologies.
 
             **Output Format:**
             You MUST return a single, valid JSON object that conforms to the provided schema. Do not include any text or markdown before or after the JSON object.
@@ -158,37 +178,47 @@ export async function* generateContentPlanStream(
 export async function generateThirtyDayPlan(topic: string): Promise<ThirtyDayPlan> {
      try {
         const prompt = `
-            You are an expert social media strategist and business consultant. Your goal is to generate a comprehensive and actionable 30-day content calendar based on a user's topic. Each day must be a complete, detailed plan.
+            You are an expert social media strategist and direct response copywriter. Your goal is to generate a comprehensive 30-day content calendar based on a user's topic, with each day being a complete plan built on proven persuasion principles.
 
             **USER'S DETAILS:**
             - **Main Topic:** "${topic}"
 
-            **METHODOLOGY (APPLY THIS TO THE ENTIRE 30-DAY STRATEGY):**
+            **CRITICAL OVERRIDING INSTRUCTION: HUMAN-CENTERED & DIRECT CONTENT**
+            This is the most important rule. The entire 30-day plan must feel like a genuine, behind-the-scenes journey based *directly* on the user's topic. Do NOT create abstract, generic marketing concepts.
+            -   **FAILURE EXAMPLE:** If the user's topic is "building a home theater," it is a COMPLETE FAILURE to suggest daily topics like "The Philosophy of Sound" or "Why Cinema Matters."
+            -   **SUCCESS EXAMPLE:** For the same topic, successful daily ideas are "Day 1: Unboxing the new projector!", "Day 5: Running what feels like a million miles of wire," or "Day 12: First look at the screen we chose and why."
+            -   **Your Persona:** You are a creator mapping out their month. Your tone must be authentic, direct, and human. Each day's plan should feel like a real social media post. If this rule is not followed, the entire output is useless.
 
-            **Step 1: Identify The REAL Business (The Core Strategy)**
-            This is your most critical task. Before creating any content, you must identify the "business behind the business" for the user's topic. This single insight will be the foundation for the entire 30-day plan. You will state this in the 'realBusinessJustification' field.
+            **METHODOLOGY (APPLY THIS TO THE ENTIRE 30-DAY STRATEGY, FILTERED THROUGH THE CRITICAL INSTRUCTION ABOVE):**
 
-            -   **Principle:** What got someone to a million won't get them to 30 million. The biggest opportunity is right in front of them, but they're often working on the wrong stuff because they're in a completely different business than they think.
-            -   **Examples:**
-                -   A gym isn't a fitness business; it's a **marketing and sales** business.
-                -   A supplement company isn't a product business; it's a **brand, media, and distribution** business.
-                -   A cleaning service is a **recruiting and training** business.
-            -   **Your Task:** Analyze "${topic}" and determine its "real business". This core theme must be woven through the entire 30-day plan. All 30 content ideas should, in some way, address this core business challenge.
+            **Step 1: Identify The REAL Business & Audience Journey (The Core Strategy)**
+            This is your most critical task. First, identify the "business behind the business" for the user's topic. Then, map out a 30-day content journey that guides a potential customer from being Problem Aware to Most Aware. The first week should focus on the problem, the middle weeks on the solution and building authority, and the final week on your specific offer. This entire strategic journey must be explained in the 'realBusinessJustification' field.
+            -   **Principle:** A gym isn't a fitness business; it's a **marketing and sales** business.
+            -   **Your Task:** Analyze "${topic}", determine its "real business", and structure the 30-day plan to align with the audience awareness funnel.
 
             **Step 2: Generate 30 FULL Content Plans**
-            Based on the core strategy from Step 1, create 30 distinct, complete content plans—one for each day. For EACH of the 30 days, you must generate the following:
-            1.  **ideaTitle:** A niche, viral-worthy title that relates to the core strategy.
-            2.  **hook:** A powerful, scroll-stopping hook.
-            3.  **script:** A concise three-part script (Hook, Problem/Conflict, Solution/Resolution).
-            4.  **visualIdeas:** An array of 3 distinct, creative visual ideas for filming.
-            5.  **editingTips:** An array of 3 actionable editing tips (e.g., captions, audio, cuts).
-            6.  **cta:** A clear call-to-action.
+            Based on the core strategy from Step 1, create 30 distinct, complete content plans—one for each day. For EACH of the 30 days, you must apply the following framework and generate the required assets.
+
+            **A. Advanced Copywriting Framework (Apply to every single day's plan):**
+            1.  **Speak to the Primal Brain (Life-Force 8):** The hook and script MUST tap into one of these 8 primal desires: Survival, Enjoyment of food/beverages, Freedom from fear, Sexual companionship, Comfortable living, Superiority, Care for loved ones, Social approval.
+            2.  **Inoculate Against Competition:** In the 'conflict' part of the script, expose a flaw in the common way of doing things that your solution fixes. This positions you as the trusted expert.
+            3.  **Use "Extreme Specificity":** Use vivid, sensory language in the script and visual ideas. Avoid generic claims. Make it real and credible.
+            4.  **Incorporate Proof:** Weave suggestions for social proof into the script or visuals (e.g., "Show a customer result," "Flash a testimonial on screen").
+            5.  **Structure with AIDA:** Map your output to this structure: Attention (\`hook\`), Interest/Desire (\`script\`), Action (\`cta\`).
+
+            **B. Daily Content Generation (Based on the framework above):**
+
+            1.  **ideaTitle:** A niche, viral-worthy title that strictly follows the CRITICAL OVERRIDING INSTRUCTION.
+            2.  **hook:** A powerful, scroll-stopping hook based on the copywriting framework.
+            3.  **script:** A concise three-part script (Hook, Problem/Conflict, Solution/Resolution) based on the copywriting framework.
+            4.  **visualIdeas:** An array of 3 distinct, creative visual ideas.
+            5.  **editingTips:** An array of 3 actionable editing tips.
+            6.  **cta:** A clear call-to-action appropriate for that day's stage in the customer journey.
 
             **INSTRUCTIONS:**
-            -   **Cohesion:** The 30 days must feel like a cohesive strategy, all reinforcing the "real business" insight you identified.
-            -   **Variety:** Use a mix of content styles (e.g., actionable tips, personal stories, trend analysis, myth-busting) across the 30 days to keep the calendar engaging.
-            -   **Adaptability:** Provide ideas that are adaptable for both 'with-face' and 'faceless' styles.
-            -   **Output Format:** You MUST return a single, valid JSON object that strictly conforms to the provided schema. The 'plan' array must contain exactly 30 items, and the top-level 'realBusinessJustification' field must be filled.
+            -   **Cohesion:** The 30 days must feel like a cohesive strategy, all reinforcing the "real business" insight.
+            -   **Variety:** Use a mix of content styles across the 30 days.
+            -   **Output Format:** You MUST return a single, valid JSON object that strictly conforms to the provided schema. The 'plan' array must contain exactly 30 items.
 
             **TASK:**
             Generate the complete 30-day content plan based on this methodology.

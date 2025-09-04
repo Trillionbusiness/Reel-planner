@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import type { DayPlan, ThirtyDayPlan } from '../types';
 import { DownloadIcon, HtmlIcon, HookIcon, ScriptIcon, VisualsIcon, EditingIcon, CtaIcon, CheckIcon } from './Icons';
@@ -90,6 +91,7 @@ interface ThirtyDayPlanModalProps {
 }
 
 export const ThirtyDayPlanModal: React.FC<ThirtyDayPlanModalProps> = ({ plan, topic, onClose, onDownloadPdf, onDownloadHtml, pdfContentRef }) => {
+
   return (
     <div 
         className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 animate-fade-in"
@@ -119,7 +121,10 @@ export const ThirtyDayPlanModal: React.FC<ThirtyDayPlanModalProps> = ({ plan, to
 
                 <div className="grid grid-cols-1 divide-y divide-rose-200">
                     {plan.plan.sort((a,b) => a.day - b.day).map(dayPlan => (
-                        <DailyPlanView key={dayPlan.day} dayPlan={dayPlan} />
+                        <DailyPlanView 
+                            key={dayPlan.day} 
+                            dayPlan={dayPlan} 
+                        />
                     ))}
                 </div>
             </div>

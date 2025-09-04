@@ -1,4 +1,5 @@
 
+
 // A single piece of content's structure
 interface BaseContentPlan {
   ideaTitle: string;

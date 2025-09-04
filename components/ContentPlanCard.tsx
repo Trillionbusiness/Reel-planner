@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import type { ContentPlan } from '../types';
 import { StrategyIcon, IdeaIcon, HookIcon, ScriptIcon, VisualsIcon, EditingIcon, CtaIcon, CheckIcon } from './Icons';
@@ -71,7 +72,7 @@ export const ContentPlanCard: React.FC<ContentPlanCardProps> = ({ plan }) => {
         <ul className="space-y-2">
             {plan.editingTips?.map((tip, index) => <ListItem key={index}>{tip}</ListItem>)}
         </ul>
-      </section>
+      </Section>
 
       <Section icon={<CtaIcon />} title="Call to Action">
         <p className={`text-base sm:text-lg font-semibold text-center rounded-lg py-3 px-4 min-h-[3rem] ${plan.cta ? 'text-white bg-[#D3A6A0]' : 'bg-gray-200 animate-pulse'}`}>
