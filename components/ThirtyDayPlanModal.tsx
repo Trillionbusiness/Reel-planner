@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import type { DayPlan, ThirtyDayPlan } from '../types';
 import { DownloadIcon, HtmlIcon, HookIcon, ScriptIcon, VisualsIcon, EditingIcon, CtaIcon, CheckIcon } from './Icons';
@@ -83,14 +81,15 @@ const DailyPlanView: React.FC<{ dayPlan: DayPlan }> = ({ dayPlan }) => {
 
 interface ThirtyDayPlanModalProps {
   plan: ThirtyDayPlan;
-  topic: string;
+  prompt: string;
   onClose: () => void;
   onDownloadPdf: () => void;
   onDownloadHtml: () => void;
   pdfContentRef: React.RefObject<HTMLDivElement>;
+  error: string | null;
 }
 
-export const ThirtyDayPlanModal: React.FC<ThirtyDayPlanModalProps> = ({ plan, topic, onClose, onDownloadPdf, onDownloadHtml, pdfContentRef }) => {
+export const ThirtyDayPlanModal: React.FC<ThirtyDayPlanModalProps> = ({ plan, prompt, onClose, onDownloadPdf, onDownloadHtml, pdfContentRef, error }) => {
 
   return (
     <div 
@@ -102,7 +101,7 @@ export const ThirtyDayPlanModal: React.FC<ThirtyDayPlanModalProps> = ({ plan, to
         <header className="p-5 border-b border-rose-200 flex justify-between items-center sticky top-0 bg-[#FDF8F5]/80 backdrop-blur-sm z-10 rounded-t-2xl">
           <div className="text-[#5D504A]">
             <h2 className="text-xl font-bold">Your 30-Day Content Calendar</h2>
-            <p className="text-sm text-[#8C766A]">Topic: "{topic}"</p>
+            <p className="text-sm text-[#8C766A] truncate max-w-xs sm:max-w-md">Request: "{prompt}"</p>
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-3xl leading-none" aria-label="Close modal">&times;</button>
         </header>
@@ -111,7 +110,7 @@ export const ThirtyDayPlanModal: React.FC<ThirtyDayPlanModalProps> = ({ plan, to
             <div ref={pdfContentRef} className="bg-[#FDF8F5] p-2 sm:p-4">
                 <div className="text-center mb-6">
                     <h1 className="text-3xl font-bold text-[#5D504A]">30-Day Content Plan</h1>
-                    <p className="text-xl text-[#8C766A]">Topic: "{topic}"</p>
+                    <p className="text-lg text-[#8C766A]">Based on: "{prompt}"</p>
                 </div>
                 
                 <div className="mb-6 p-4 bg-amber-50 rounded-lg border border-amber-200">
@@ -130,27 +129,30 @@ export const ThirtyDayPlanModal: React.FC<ThirtyDayPlanModalProps> = ({ plan, to
             </div>
         </div>
 
-        <footer className="p-4 border-t border-rose-200 flex flex-wrap justify-end gap-3 sticky bottom-0 bg-[#FDF8F5]/80 backdrop-blur-sm z-10 rounded-b-2xl">
-          <button 
-            onClick={onClose} 
-            className="px-4 py-2 text-sm font-semibold text-[#8C766A] bg-rose-100 rounded-full hover:bg-rose-200 transition"
-          >
-            Close
-          </button>
-           <button 
-            onClick={onDownloadHtml} 
-            className="px-4 py-2 text-sm font-semibold text-white bg-[#8C766A] rounded-full hover:bg-[#7a655a] transition flex items-center gap-2"
-          >
-            <HtmlIcon />
-            Download HTML
-          </button>
-          <button 
-            onClick={onDownloadPdf} 
-            className="px-4 py-2 text-sm font-semibold text-white bg-[#D3A6A0] rounded-full hover:bg-[#c99891] transition flex items-center gap-2"
-          >
-            <DownloadIcon />
-            Download PDF
-          </button>
+        <footer className="p-4 border-t border-rose-200 flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 sticky bottom-0 bg-[#FDF8F5]/80 backdrop-blur-sm z-10 rounded-b-2xl">
+          {error && <p className="text-red-600 text-sm text-left sm:flex-grow">{error}</p>}
+          <div className="flex justify-end gap-3 flex-wrap">
+            <button 
+                onClick={onClose} 
+                className="px-4 py-2 text-sm font-semibold text-[#8C766A] bg-rose-100 rounded-full hover:bg-rose-200 transition"
+            >
+                Close
+            </button>
+            <button 
+                onClick={onDownloadHtml} 
+                className="px-4 py-2 text-sm font-semibold text-white bg-[#8C766A] rounded-full hover:bg-[#7a655a] transition flex items-center gap-2"
+            >
+                <HtmlIcon />
+                Download HTML
+            </button>
+            <button 
+                onClick={onDownloadPdf} 
+                className="px-4 py-2 text-sm font-semibold text-white bg-[#D3A6A0] rounded-full hover:bg-[#c99891] transition flex items-center gap-2"
+            >
+                <DownloadIcon />
+                Download PDF
+            </button>
+          </div>
         </footer>
       </div>
     </div>
